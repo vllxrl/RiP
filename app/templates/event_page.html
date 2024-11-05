@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <main class="container">
+        <h3  class="text-center">Черновое получение билетов</h3>
+         <div class="form-group">
+            <label class="form-label">ФИО</label>
+            {% if event.name %}
+                <input placeholder="Введите фио" disabled type="text" class="form-control" style="width: 300px" value="{{ event.name }}">
+            {% else %}
+                <input placeholder="Введите фио" disabled type="text" class="form-control" style="width: 300px">
+            {% endif %}
+        </div>
+        <form method="post" action="{% url 'delete_event' event.id %}">
+            {% csrf_token %}
+                <button class="btn btn-danger delete-draft-event-btn" type="submit">
+                    Удалить
+                </button>
+            </a>
+        </form>
+            {% if event.get_tickets|length > 0 %}
+                <h4 class="text-center">Билеты</h4>
+                <div class="cards-wrapper d-flex flex-column">
+                    {% for ticket in event.get_tickets %}
+                        <div class="card w-100 mb5">
+                             <div class="row g-0">
+                                <div class="col-md-6 d-flex justify-center">
+                                    <img src="{{ ticket.get_image }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ ticket.name }}</h5>
+                                        <p class="card-text">Дата: {{ ticket.date }}</p>
+                                        <div class="form-group">
+                                            <label class="form-label">Количество</label>
+                                            <input disabled type="text" class="form-control" style="width: 250px" value="{{ ticket.value }}">
+                                        </div>
+                                        <a href="/tickets/{{ ticket.id }}/" class="btn btn-primary" style="width: 100px">
+                                            Открыть
+                                        </a>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                 <h4 class="text-center">Билеты еще не добавлены</h4>
+            {% endif %}
+        </div>
+    </main>
+{% endblock content %}
